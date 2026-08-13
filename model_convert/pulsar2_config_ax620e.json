@@ -1,0 +1,44 @@
+{
+  "input": "/workspace/model.onnx",
+  "output_dir": "/workspace/output_ax620e",
+  "output_name": "model.axmodel",
+  "work_dir": "/workspace/output_ax620e/work",
+  "model_type": "ONNX",
+  "target_hardware": "AX620E",
+  "npu_mode": "NPU2",
+  "input_shapes": "fbank:1x26x64",
+  "onnx_opt": {
+    "disable_onnx_optimization": false,
+    "enable_onnxsim": false,
+    "model_check": true
+  },
+  "quant": {
+    "input_configs": [
+      {
+        "tensor_name": "fbank",
+        "calibration_dataset": "/workspace/calib_data/input.tar.gz",
+        "calibration_format": "Numpy",
+        "calibration_size": 30,
+        "calibration_mean": [],
+        "calibration_std": []
+      }
+    ],
+    "calibration_method": "MinMax",
+    "precision_analysis": true,
+    "precision_analysis_method": "EndToEnd",
+    "highest_mix_precision": false
+  },
+  "input_processors": [
+    {
+      "tensor_name": "fbank",
+      "tensor_format": "RGB",
+      "tensor_layout": "NCHW",
+      "src_format": "RGB",
+      "src_dtype": "FP32",
+      "src_layout": "NCHW"
+    }
+  ],
+  "compiler": {
+    "check": 1
+  }
+}

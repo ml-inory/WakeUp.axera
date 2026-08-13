@@ -1,0 +1,38 @@
+{
+  "name": "wakeup_nihao_aixin_ax650",
+  "framework": "ONNX",
+  "task": "wake_word_detection",
+  "route": "general",
+  "inputs": [
+    {
+      "name": "fbank",
+      "shape": [
+        1,
+        26,
+        64
+      ],
+      "dtype": "float32",
+      "layout": "NCHW"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "logits",
+      "shape": [
+        1,
+        2,
+        64
+      ],
+      "dtype": "float32"
+    }
+  ],
+  "preprocess": "reference log-fbank: sample/32768 -> hann(512,periodic) -> rfft magnitude -> mel filterbank (26) -> log(x+1e-7) -> Q6.10 (q=x*1024/1024)",
+  "postprocess": "wake word '你好，爱芯': wake score = logits[1, last]; 3-frame sliding sum vs threshold (0.608 DET_MODE_90 / 0.615 DET_MODE_95)",
+  "sdk_interface": {
+    "input": "int16 pcm mono 16k, 512 samples per frame",
+    "output": "per-frame wake score + trigger event"
+  },
+  "hardware": "AX650",
+  "npu_mode": "NPU3",
+  "training": "fine-tuned from WakeNet9 with edge-tts data (see model_convert/train/)"
+}
